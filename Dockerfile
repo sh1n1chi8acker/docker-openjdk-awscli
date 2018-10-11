@@ -1,10 +1,17 @@
-FROM circleci/openjdk:8-jdk
+FROM circleci/openjdk:8-jdk-browsers
 
-RUN sudo apt-get update && sudo apt-get install -y \
-    python-dev \
-    python-pip \
-    shellcheck \
-    && sudo apt-get clean \
-    && sudo rm -rf /var/lib/apt/lists/*
-RUN sudo pip install awscli
+USER root
 
+RUN set -ex \
+    && apt-get update && apt-get install -y \
+        python-dev \
+        python-pip \
+        shellcheck \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN set -ex \
+    && pip install -U pip setuptools \
+    && pip install awscli
+
+USER circleci
